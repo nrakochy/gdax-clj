@@ -7,11 +7,6 @@
                    :fix  "https://fix.gdax.com:4198"
                    :ws    "wss://ws-feed.gdax.com"})
 
-(def routes {"GET" {:account {:route "/accounts/{{account-id}}"
-                              :required-keys [:account-id]}}
-             "POST" {}
-             "DELETE" {}})
-
 (defn response-handler
   "Hand ajax response back to caller"
   [[ok response]] response)
@@ -29,7 +24,7 @@
        (merge headers)
        (assoc request :headers)))
 
-(defn set-uri [{:keys [method resource endpoint-type] :as request}]
+(defn set-uri [{:keys [domain route method resource] :as request}]
   (let [{:keys [route]} (get-in routes [method resource])
         relative-path   (parser/render route request)
         domain          (get url-resource endpoint-type)]
